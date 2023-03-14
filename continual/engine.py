@@ -18,6 +18,9 @@ import continual.utils as utils
 from continual.losses import DistillationLoss
 from continual.pod import pod_loss
 
+from advertorch.attacks import LinfPGDAttack, L2PGDAttack, FGSM
+import torch.nn as nn
+
 
 CE = SoftTargetCrossEntropy()
 
@@ -31,7 +34,7 @@ def train_one_epoch(model: torch.nn.Module, criterion: DistillationLoss,
                     model_without_ddp: torch.nn.Module = None,
                     sam: torch.optim.Optimizer = None,
                     loader_memory=None,
-                    pod=None, pod_scales=[1]):
+                    pod=None, pod_scales=[1],adversary):
     """Code is a bit ugly to handle SAM, sorry! :upside_down_face:"""
     model.train(set_training_mode)
     metric_logger = utils.MetricLogger(delimiter="  ")
@@ -45,6 +48,7 @@ def train_one_epoch(model: torch.nn.Module, criterion: DistillationLoss,
 
         samples = samples.to(device, non_blocking=True)
         targets = targets.to(device, non_blocking=True)
+        samples = adversary.perturb(images,targets)
         optimizer.zero_grad()
 
         lam = None
@@ -263,6 +267,7 @@ def compute_pod(feats, old_feats, scales):
 
 @torch.no_grad()
 def evaluate(data_loader, model, device, logger):
+
     criterion = torch.nn.CrossEntropyLoss()
 
     metric_logger = utils.MetricLogger(delimiter="  ")
@@ -270,10 +275,15 @@ def evaluate(data_loader, model, device, logger):
 
     # switch to evaluation mode
     model.eval()
+    adversary_8 = LinfPGDAttack(
+            model, loss_fn=nn.CrossEntropyLoss(), eps=8/255, nb_iter=20, eps_iter=2/255,
+            rand_init=0, clip_min=0.0, clip_max=1.0, targeted=False
+        )
 
     for images, target, task_ids in metric_logger.log_every(data_loader, 10, header):
         images = images.to(device, non_blocking=True)
         target = target.to(device, non_blocking=True)
+        images = adversar_8.perturb(images,target)
 
         # compute output
         with torch.cuda.amp.autocast():

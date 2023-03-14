@@ -40,8 +40,8 @@ def get_args_parser():
     parser = argparse.ArgumentParser('DyTox training and evaluation script', add_help=False)
     parser.add_argument('--batch-size', default=128, type=int)
     parser.add_argument('--incremental-batch-size', default=None, type=int)
-    parser.add_argument('--epochs', default=500, type=int)
-    parser.add_argument('--base-epochs', default=500, type=int,
+    parser.add_argument('--epochs', default=50, type=int)
+    parser.add_argument('--base-epochs', default=50, type=int,
                         help='Number of epochs for base task')
     parser.add_argument('--no-amp', default=False, action='store_true',
                         help='Disable mixed precision')
@@ -575,6 +575,10 @@ def main(args):
 
         print(f"Start training for {epochs-initial_epoch} epochs")
         max_accuracy = 0.0
+        adversary = LinfPGDAttack(
+            model, loss_fn=nn.CrossEntropyLoss(), eps=8/255, nb_iter=1, eps_iter=8/255,
+            rand_init=0, clip_min=0.0, clip_max=1.0, targeted=False
+        )
         for epoch in range(initial_epoch, epochs):
             if args.distributed:
                 loader_train.sampler.set_epoch(epoch)
@@ -589,7 +593,8 @@ def main(args):
                 model_without_ddp=model_without_ddp,
                 sam=sam,
                 loader_memory=loader_memory,
-                pod=args.pod if task_id > 0 else None, pod_scales=args.pod_scales
+                pod=args.pod if task_id > 0 else None, pod_scales=args.pod_scales,
+                adversary=adversary
             )
 
             lr_scheduler.step(epoch)
