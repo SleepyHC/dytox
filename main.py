@@ -578,7 +578,7 @@ def main(args):
         print(f"Start training for {epochs-initial_epoch} epochs")
         max_accuracy = 0.0
         adversary = LinfPGDAttack(
-            model, loss_fn=Loss_for_PGD, eps=8/255, nb_iter=1, eps_iter=8/255,
+            model, loss_fn=nn.CrossEntropyLoss(), eps=8/255, nb_iter=1, eps_iter=8/255,
             rand_init=0, clip_min=0.0, clip_max=1.0, targeted=False
         )
         for epoch in range(initial_epoch, epochs):
