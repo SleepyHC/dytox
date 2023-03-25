@@ -168,14 +168,18 @@ def check_loss(loss):
     if not math.isfinite(loss.item()):
         raise Exception('Loss is {}, stopping training'.format(loss.item()))
 
-def Loss_for_PGD(outputs,targets):
-    if isinstance(outputs, dict):
-        main_output = outputs['logits']
-        div_output = outputs['div']
-    else:
-        main_output = outputs
+Class NewLoss(nn.Module):
+    def __init__():
+        pass
 
-    return nn.CrossEntropyLoss(main_output, targets)
+    def forward(outputs,targets):
+        if isinstance(outputs, dict):
+            main_output = outputs['logits']
+            div_output = outputs['div']
+        else:
+            main_output = outputs
+        return nn.CrossEntropyLoss(main_output, targets)
+
 
 def forward(samples, targets, model, teacher_model, criterion, lam, args):
     main_output, div_output = None, None
