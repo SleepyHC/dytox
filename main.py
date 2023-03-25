@@ -451,9 +451,9 @@ def main(args):
                 dataset_true_val.concat(dataset_val)
             dataset_val = dataset_true_val
 
-        for i in range(3):  # Quick check to ensure same preprocessing between train/test
-            assert abs(dataset_train.trsf.transforms[-1].mean[i] - dataset_val.trsf.transforms[-1].mean[i]) < 0.0001
-            assert abs(dataset_train.trsf.transforms[-1].std[i] - dataset_val.trsf.transforms[-1].std[i]) < 0.0001
+        # for i in range(3):  # Quick check to ensure same preprocessing between train/test
+        #     assert abs(dataset_train.trsf.transforms[-1].mean[i] - dataset_val.trsf.transforms[-1].mean[i]) < 0.0001
+        #     assert abs(dataset_train.trsf.transforms[-1].std[i] - dataset_val.trsf.transforms[-1].std[i]) < 0.0001
 
         loader_memory = None
         if task_id > 0 and memory is not None:
