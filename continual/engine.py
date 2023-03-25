@@ -169,19 +169,19 @@ def check_loss(loss):
         raise Exception('Loss is {}, stopping training'.format(loss.item()))
 
 class Loss_for_PGD(nn.Module):
-    def __init__(self):
+    def __init__(self,outputs,targets):
         super().__init__()
-        # self.outputs=outputs
-        # self.targets=targets
+        self.outputs=outputs
+        self.targets=targets
         return
 
-    def forward(outputs,targets):
+    def forward():
         if isinstance(outputs, dict):
-            main_output = outputs['logits']
-            div_output = outputs['div']
+            main_output = self.outputs['logits']
+            div_output = self.outputs['div']
         else:
-            main_output = outputs
-        return nn.CrossEntropyLoss(main_output, targets)
+            main_output = self.outputs
+        return nn.CrossEntropyLoss(main_output, self.targets)
 
 
 def forward(samples, targets, model, teacher_model, criterion, lam, args):
