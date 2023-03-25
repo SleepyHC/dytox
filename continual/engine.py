@@ -168,7 +168,7 @@ def check_loss(loss):
     if not math.isfinite(loss.item()):
         raise Exception('Loss is {}, stopping training'.format(loss.item()))
 
-Class NewLoss(nn.Module):
+class Loss_for_PGD(nn.Module):
     def __init__():
         pass
 
