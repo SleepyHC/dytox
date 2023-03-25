@@ -30,7 +30,7 @@ from continual.classifier import Classifier
 from continual.rehearsal import Memory, get_finetuning_dataset
 from continual.sam import SAM
 from continual.datasets import build_dataset
-from continual.engine import eval_and_log, train_one_epoch
+from continual.engine import eval_and_log, train_one_epoch,Loss_for_PGDloss
 from continual.losses import bce_with_logits, soft_bce_with_logits
 from advertorch.attacks import LinfPGDAttack, L2PGDAttack, FGSM
 import torch.nn as nn
