@@ -169,7 +169,7 @@ def check_loss(loss):
         raise Exception('Loss is {}, stopping training'.format(loss.item()))
 
 class Loss_for_PGD(nn.Module):
-    def __init__(outputs,targets):
+    def __init__(self,outputs,targets):
         self.outputs=outputs
         self.targets=targets
         return
