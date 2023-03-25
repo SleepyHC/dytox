@@ -66,9 +66,11 @@ def train_one_epoch(model: torch.nn.Module, criterion: DistillationLoss,
                 loss_tuple = forward(samples, targets, model, teacher_model, criterion, lam, args)
 
         loss = sum(filter(lambda x: x is not None, loss_tuple))
+        # kd loss
         internal_losses = model_without_ddp.get_internal_losses(loss)
         for internal_loss_value in internal_losses.values():
             loss += internal_loss_value
+            # NONE
 
         if pod is not None and teacher_model is not None:
             if args.pod_scaling:
@@ -80,6 +82,7 @@ def train_one_epoch(model: torch.nn.Module, criterion: DistillationLoss,
 
             loss += pod_scaling * pod * compute_pod(
                 model.module.feats, teacher_model.feats, pod_scales)
+            
 
         check_loss(loss)
 
@@ -165,6 +168,14 @@ def check_loss(loss):
     if not math.isfinite(loss.item()):
         raise Exception('Loss is {}, stopping training'.format(loss.item()))
 
+def Loss_for_PGD(outputs,targets):
+    if isinstance(outputs, dict):
+        main_output = outputs['logits']
+        div_output = outputs['div']
+    else:
+        main_output = outputs
+
+    return nn.CrossEntropyLoss(main_output, targets)
 
 def forward(samples, targets, model, teacher_model, criterion, lam, args):
     main_output, div_output = None, None
