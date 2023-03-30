@@ -622,11 +622,15 @@ def main(args):
                         }, checkpoint_path)
 
             if args.eval_every and (epoch % args.eval_every  == 0 or (args.finetuning and epoch == epochs - 1)):
+                adversary_8 = LinfPGDAttack(
+                    model, loss_fn=nn.CrossEntropyLoss(), eps=8/255, nb_iter=20, eps_iter=2/255,
+                    rand_init=0, clip_min=0.0, clip_max=1.0, targeted=False
+                )
                 eval_and_log(
                     args, output_dir, model, model_without_ddp, optimizer, lr_scheduler,
                     epoch, task_id, loss_scaler, max_accuracy,
                     [], n_parameters, device, loader_val, train_stats, None, long_log_path,
-                    logger, model_without_ddp.epoch_log()
+                    logger, model_without_ddp.epoch_log(),adversary_8=adversary_8
                 )
                 logger.end_epoch()
 

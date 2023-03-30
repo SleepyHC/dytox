@@ -288,7 +288,7 @@ def compute_pod(feats, old_feats, scales):
 
 
 @torch.no_grad()
-def evaluate(data_loader, model, device, logger):
+def evaluate(data_loader, model, device, logger,adversary_8):
 
     criterion = torch.nn.CrossEntropyLoss()
 
@@ -297,17 +297,15 @@ def evaluate(data_loader, model, device, logger):
 
     # switch to evaluation mode
     model.eval()
-    adversary_8 = LinfPGDAttack(
-            model, loss_fn=nn.CrossEntropyLoss(), eps=8/255, nb_iter=20, eps_iter=2/255,
-            rand_init=0, clip_min=0.0, clip_max=1.0, targeted=False
-        )
+    # adversary_8 = LinfPGDAttack(
+    #         model, loss_fn=nn.CrossEntropyLoss(), eps=8/255, nb_iter=20, eps_iter=2/255,
+    #         rand_init=0, clip_min=0.0, clip_max=1.0, targeted=False
+    #     )
 
     for images, target, task_ids in metric_logger.log_every(data_loader, 10, header):
         images = images.to(device, non_blocking=True)
         target = target.to(device, non_blocking=True)
         images = adversary_8.perturb(images,target)
-        images = images.to(device, non_blocking=True)
-        target = target.to(device, non_blocking=True)
 
         # compute output
         with torch.cuda.amp.autocast():
