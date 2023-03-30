@@ -34,7 +34,7 @@ def train_one_epoch(model: torch.nn.Module, criterion: DistillationLoss,
                     model_without_ddp: torch.nn.Module = None,
                     sam: torch.optim.Optimizer = None,
                     loader_memory=None,
-                    pod=None, pod_scales=[1],adversary=None):
+                    pod=None, pod_scales=[1],adversary=LinfPGDAttack):
     """Code is a bit ugly to handle SAM, sorry! :upside_down_face:"""
     model.train(set_training_mode)
     metric_logger = utils.MetricLogger(delimiter="  ")

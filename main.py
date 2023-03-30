@@ -577,7 +577,7 @@ def main(args):
 
         print(f"Start training for {epochs-initial_epoch} epochs")
         max_accuracy = 0.0
-        adversary = LinfPGDAttack(
+        adversary_1 = LinfPGDAttack(
             model, loss_fn=nn.CrossEntropyLoss(), eps=8/255, nb_iter=1, eps_iter=8/255,
             rand_init=0, clip_min=0.0, clip_max=1.0, targeted=False
         )
@@ -596,7 +596,7 @@ def main(args):
                 sam=sam,
                 loader_memory=loader_memory,
                 pod=args.pod if task_id > 0 else None, pod_scales=args.pod_scales,
-                adversary=adversary
+                adversary=adversary_1
             )
 
             lr_scheduler.step(epoch)
