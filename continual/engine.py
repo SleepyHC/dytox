@@ -48,7 +48,7 @@ def train_one_epoch(model: torch.nn.Module, criterion: DistillationLoss,
 
         samples = samples.to(device, non_blocking=True)
         targets = targets.to(device, non_blocking=True)
-        # samples = adversary.perturb(samples,targets)
+        samples = adversary.perturb(samples,targets)
         samples = samples.to(device, non_blocking=True)
         targets = targets.to(device, non_blocking=True)
         optimizer.zero_grad()
