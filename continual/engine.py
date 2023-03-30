@@ -54,12 +54,14 @@ def train_one_epoch(model: torch.nn.Module, criterion: DistillationLoss,
         lam = None
         if mixup_fn is not None:
             samples, targets, lam = mixup_fn(samples, targets)
+            samples = samples.to(device, non_blocking=True)
+            targets = targets.to(device, non_blocking=True)
 
         if sam is not None and (args.sam_first == 'memory' and task_id > 0):
             # If you want to do the first step of SAM only on memory samples.
             x, y, _ = loader_memory.get()
             x, y = x.to(device, non_blocking=True), y.to(device, non_blocking=True)
-            print(x.device,y.device)
+            # print(x.device,y.device)
             with torch.cuda.amp.autocast(enabled=not args.no_amp):
                 loss_tuple = forward(x, y, model, teacher_model, criterion, lam, args)
         else:
@@ -190,10 +192,10 @@ def forward(samples, targets, model, teacher_model, criterion, lam, args):
 
     outputs = model(samples)
     if isinstance(outputs, dict):
-        main_output = outputs['logits'].to("cuda")
+        main_output = outputs['logits']
         div_output = outputs['div']
     else:
-        main_output = outputs.to("cuda")
+        main_output = outputs
 
     loss = criterion(main_output, targets)
 
