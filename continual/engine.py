@@ -188,6 +188,7 @@ def forward(samples, targets, model, teacher_model, criterion, lam, args):
     main_output, div_output = None, None
 
     outputs = model(samples)
+    outputs=outputs.to(device)
     if isinstance(outputs, dict):
         main_output = outputs['logits']
         div_output = outputs['div']
