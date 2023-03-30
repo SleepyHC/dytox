@@ -189,10 +189,10 @@ def forward(samples, targets, model, teacher_model, criterion, lam, args):
 
     outputs = model(samples)
     if isinstance(outputs, dict):
-        main_output = outputs['logits'].to(device)
-        div_output = outputs['div'].to(device)
+        main_output = outputs['logits'].to("cuda")
+        div_output = outputs['div'].to("cuda")
     else:
-        main_output = outputs.to(device)
+        main_output = outputs.to("cuda")
 
     loss = criterion(main_output, targets)
 
