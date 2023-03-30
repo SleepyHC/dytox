@@ -25,7 +25,7 @@ import torch.nn as nn
 CE = SoftTargetCrossEntropy()
 
 
-def train_one_epoch(model: torch.nn.Module, criterion: DistillationLoss,
+def train_one_epoch(adversary,model: torch.nn.Module, criterion: DistillationLoss,
                     data_loader: Iterable, optimizer: torch.optim.Optimizer,
                     device: torch.device, epoch: int, task_id: int, loss_scaler, max_norm: float = 0,
                     mixup_fn: Optional[Mixup] = None,
@@ -34,7 +34,7 @@ def train_one_epoch(model: torch.nn.Module, criterion: DistillationLoss,
                     model_without_ddp: torch.nn.Module = None,
                     sam: torch.optim.Optimizer = None,
                     loader_memory=None,
-                    pod=None, pod_scales=[1],adversary=LinfPGDAttack):
+                    pod=None, pod_scales=[1]):
     """Code is a bit ugly to handle SAM, sorry! :upside_down_face:"""
     model.train(set_training_mode)
     metric_logger = utils.MetricLogger(delimiter="  ")
