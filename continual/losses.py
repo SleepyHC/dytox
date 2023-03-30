@@ -68,7 +68,7 @@ class DistillationLoss(torch.nn.Module):
 def bce_with_logits(x, y):
     return F.binary_cross_entropy_with_logits(
         x,
-        torch.eye(x.shape[1])[y].to(y.device)
+        torch.eye(x.shape[1])[y.to("cpu")].to(y.device)
     )
 
 
