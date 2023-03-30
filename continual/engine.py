@@ -306,13 +306,15 @@ def evaluate(data_loader, model, device, logger):
         images = images.to(device, non_blocking=True)
         target = target.to(device, non_blocking=True)
         images = adversary_8.perturb(images,target)
+        images = images.to(device, non_blocking=True)
+        target = target.to(device, non_blocking=True)
 
         # compute output
         with torch.cuda.amp.autocast():
             output = model(images)
             if isinstance(output, dict):
-                output = output['logits']
-            loss = criterion(output, target)
+                output = output['logits'].to(device)
+            loss = criterion(output, target).to(device)
 
         acc1, acc5 = accuracy(output, target, topk=(1, min(5, output.shape[1])))
 
