@@ -586,6 +586,7 @@ def main(args):
                 loader_train.sampler.set_epoch(epoch)
 
             train_stats = train_one_epoch(
+                adversary_1,
                 model, criterion, loader_train,
                 optimizer, device, epoch, task_id, loss_scaler,
                 args.clip_grad, mixup_fn,
@@ -596,7 +597,6 @@ def main(args):
                 sam=sam,
                 loader_memory=loader_memory,
                 pod=args.pod if task_id > 0 else None, pod_scales=args.pod_scales,
-                adversary=adversary_1
             )
 
             lr_scheduler.step(epoch)
