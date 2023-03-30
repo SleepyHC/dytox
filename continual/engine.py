@@ -197,7 +197,7 @@ def forward(samples, targets, model, teacher_model, criterion, lam, args):
         div_output = outputs['div']
     else:
         main_output = outputs
-    print(main_output.device,targets.device)
+    # print(main_output.device,targets.device)
     loss = criterion(main_output, targets)
 
     if teacher_model is not None:
@@ -305,7 +305,7 @@ def evaluate(data_loader, model, device, logger):
     for images, target, task_ids in metric_logger.log_every(data_loader, 10, header):
         images = images.to(device, non_blocking=True)
         target = target.to(device, non_blocking=True)
-        images = adversar_8.perturb(images,target)
+        images = adversary_8.perturb(images,target)
 
         # compute output
         with torch.cuda.amp.autocast():
