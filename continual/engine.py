@@ -48,7 +48,7 @@ def train_one_epoch(adversary,model: torch.nn.Module, criterion: DistillationLos
 
         samples = samples.to(device, non_blocking=True)
         targets = targets.to(device, non_blocking=True)
-        samples = adversary.perturb(samples,targets)
+        # samples = adversary.perturb(samples,targets)
         samples = samples.to(device, non_blocking=True)
         targets = targets.to(device, non_blocking=True)
         optimizer.zero_grad()
@@ -305,7 +305,7 @@ def evaluate(data_loader, model, device, logger,adversary_8):
     for images, target, task_ids in metric_logger.log_every(data_loader, 10, header):
         images = images.to(device, non_blocking=True)
         target = target.to(device, non_blocking=True)
-        images = adversary_8.perturb(images,target)
+        # images = adversary_8.perturb(images,target)
 
         # compute output
         with torch.cuda.amp.autocast():
