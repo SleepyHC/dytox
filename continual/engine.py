@@ -334,7 +334,7 @@ def evaluate(data_loader, model, device, logger,adversary_8):
 def eval_and_log(args, output_dir, model, model_without_ddp, optimizer, lr_scheduler,
                  epoch, task_id, loss_scaler, max_accuracy, accuracy_list,
                  n_parameters, device, data_loader_val, train_stats, log_store, log_path, logger,
-                 model_log, skipped_task=False):
+                 model_log, skipped_task=False,adversary_8):
     if args.output_dir:
         if os.path.isdir(args.resume):
             checkpoint_paths = [os.path.join(args.resume, f'checkpoint_{task_id}.pth')]
@@ -354,7 +354,7 @@ def eval_and_log(args, output_dir, model, model_without_ddp, optimizer, lr_sched
                 'args': args,
             }, checkpoint_path)
 
-    test_stats = evaluate(data_loader_val, model, device, logger)
+    test_stats = evaluate(data_loader_val, model, device, logger,adversary_8)
     print(f"Accuracy of the network on the {len(data_loader_val.dataset)} test images: {test_stats['acc1']:.1f}%")
     max_accuracy = max(max_accuracy, test_stats["acc1"])
     print(f'Max accuracy: {max_accuracy:.2f}%')
