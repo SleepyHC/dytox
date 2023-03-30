@@ -623,7 +623,7 @@ def main(args):
 
             if args.eval_every and (epoch % args.eval_every  == 0 or (args.finetuning and epoch == epochs - 1)):
                 adversary_8 = LinfPGDAttack(
-                    model, loss_fn=nn.CrossEntropyLoss(), eps=8/255, nb_iter=20, eps_iter=2/255,
+                    model, loss_fn=criterion, eps=8/255, nb_iter=20, eps_iter=2/255,
                     rand_init=0, clip_min=0.0, clip_max=1.0, targeted=False
                 )
                 eval_and_log(
