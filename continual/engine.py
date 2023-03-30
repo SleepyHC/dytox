@@ -190,7 +190,7 @@ def forward(samples, targets, model, teacher_model, criterion, lam, args):
     outputs = model(samples)
     if isinstance(outputs, dict):
         main_output = outputs['logits'].to("cuda")
-        div_output = outputs['div'].to("cuda")
+        div_output = outputs['div']
     else:
         main_output = outputs.to("cuda")
 
