@@ -33,7 +33,7 @@ def pgd_attack(model, images,device, labels, eps=8/255, alpha=10/255, iters=1) :
 
     for i in range(iters) :
         images.requires_grad = True
-        print(images)
+        # print(images)
         outputs = model(images)
         if isinstance(outputs, dict):
             main_output = outputs['logits']
@@ -44,6 +44,7 @@ def pgd_attack(model, images,device, labels, eps=8/255, alpha=10/255, iters=1) :
         cost = loss(main_output, labels).to(device).requires_grad_()
         cost.backward()
         # 图像 + 梯度得到对抗样本
+        print(images.grad)
         adv_images = images + alpha*images.grad.sign()
         # 限制扰动范围
         eta = torch.clamp(adv_images - ori_images, min=-eps, max=eps)
