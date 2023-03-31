@@ -309,7 +309,8 @@ def get_args_parser():
     parser.add_argument('--bce-loss', default=False, action='store_true')
 
     # distributed training parameters
-    parser.add_argument('--local_rank', default=None, type=int)
+    parser.add_argument('--local_rank', default=1, type=int)
+    parser.add_argument('--local-rank', default=1, type=int)
     parser.add_argument('--world_size', default=1, type=int,
                         help='number of distributed processes')
     parser.add_argument('--dist_url', default='env://', help='url used to set up distributed training')
