@@ -46,7 +46,8 @@ def pgd_attack(model, images,device, labels, eps=8/255, alpha=10/255, iters=1) :
         # 图像 + 梯度得到对抗样本
         print("loss",cost)
         print("loss.grad",cost.grad)
-        print("image.grad",images.grad)
+        # print("image.grad",images.grad)
+        print(type(img))
         adv_images = images + alpha*images.grad.sign()
         # 限制扰动范围
         eta = torch.clamp(adv_images - ori_images, min=-eps, max=eps)
