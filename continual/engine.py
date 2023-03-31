@@ -333,7 +333,7 @@ def evaluate(data_loader, model, device, logger,adversary_8):
         images = images.to(device, non_blocking=True)
         target = target.to(device, non_blocking=True)
         # images = adversary_8.perturb(images,target)
-        samples=pgd_attack(model,samples,device,targets,iters=20,alpha=2/255)
+        images=pgd_attack(model,images,device,targets,iters=20,alpha=2/255)
 
         # compute output
         with torch.cuda.amp.autocast():
