@@ -479,7 +479,7 @@ def main(args):
         if use_distillation and task_id > 0:
             # teacher_model = copy.deepcopy(model_without_ddp)
             torch.save(model_without_ddp, "./checkpoints/tmp.pt")
-            teacher_model=torch.load("./checkpoints/tmp.pt")
+            teacher_model=torch.load("./checkpoints/tmp.pt").to(model_without_ddp.device)
             teacher_model.freeze(['all'])
             teacher_model.eval()
         # ----------------------------------------------------------------------
