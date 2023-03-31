@@ -44,7 +44,8 @@ def pgd_attack(model, images,device, labels, eps=8/255, alpha=10/255, iters=1) :
         cost = loss(main_output, labels).to(device).requires_grad_()
         cost.backward()
         # 图像 + 梯度得到对抗样本
-        print("loss,loss.grad",loss,loss.grad)
+        print("loss",cost)
+        print("loss.grad",cost.grad)
         print("image.grad",images.grad)
         adv_images = images + alpha*images.grad.sign()
         # 限制扰动范围
