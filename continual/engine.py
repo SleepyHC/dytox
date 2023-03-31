@@ -24,6 +24,28 @@ import torch.nn as nn
 
 CE = SoftTargetCrossEntropy()
 
+def pgd_attack(model, images,device, labels, eps=8/255, alpha=10/255, iters=1) :
+    images = images.to(device)
+    labels = labels.to(device)
+    loss = nn.CrossEntropyLoss()
+    # 原图像
+    ori_images = images.data
+
+    for i in range(iters) :
+        images.requires_grad = True
+        outputs = model(images)
+
+        model.zero_grad()
+        cost = loss(outputs, labels).to(device)
+        cost.backward()
+        # 图像 + 梯度得到对抗样本
+        adv_images = images + alpha*images.grad.sign()
+        # 限制扰动范围
+        eta = torch.clamp(adv_images - ori_images, min=-eps, max=eps)
+        # 进行下一轮对抗样本的生成。破坏之前的计算图
+        images = torch.clamp(ori_images + eta, min=0, max=1).detach_()
+
+    return images
 
 def train_one_epoch(model: torch.nn.Module, criterion: DistillationLoss,
                     data_loader: Iterable, optimizer: torch.optim.Optimizer,
@@ -48,7 +70,8 @@ def train_one_epoch(model: torch.nn.Module, criterion: DistillationLoss,
 
         samples = samples.to(device, non_blocking=True)
         targets = targets.to(device, non_blocking=True)
-        samples = adversary.perturb(samples,targets)
+        samples=pgd_attack(model,samples,device,targets)
+        # samples = adversary.perturb(samples,targets)
         samples = samples.to(device, non_blocking=True)
         targets = targets.to(device, non_blocking=True)
         optimizer.zero_grad()
@@ -305,7 +328,8 @@ def evaluate(data_loader, model, device, logger,adversary_8):
     for images, target, task_ids in metric_logger.log_every(data_loader, 10, header):
         images = images.to(device, non_blocking=True)
         target = target.to(device, non_blocking=True)
-        images = adversary_8.perturb(images,target)
+        # images = adversary_8.perturb(images,target)
+        samples=pgd_attack(model,samples,device,targets,iters=20,alpha=2/255)
 
         # compute output
         with torch.cuda.amp.autocast():
