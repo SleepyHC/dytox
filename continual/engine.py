@@ -323,7 +323,7 @@ def evaluate(data_loader, model, device, logger,adversary_8):
     header = 'Test:'
 
     # switch to evaluation mode
-    model.eval()
+    # model.eval()
     # adversary_8 = LinfPGDAttack(
     #         model, loss_fn=nn.CrossEntropyLoss(), eps=8/255, nb_iter=20, eps_iter=2/255,
     #         rand_init=0, clip_min=0.0, clip_max=1.0, targeted=False
