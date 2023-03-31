@@ -476,7 +476,8 @@ def main(args):
         # ----------------------------------------------------------------------
         # Initializing teacher model from previous task
         if use_distillation and task_id > 0:
-            teacher_model = copy.deepcopy(model_without_ddp)
+            # teacher_model = copy.deepcopy(model_without_ddp)
+            teacher_model=model_without_ddp.clone()
             teacher_model.freeze(['all'])
             teacher_model.eval()
         # ----------------------------------------------------------------------
