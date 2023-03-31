@@ -41,7 +41,7 @@ def pgd_attack(model, images,device, labels, eps=8/255, alpha=10/255, iters=1) :
             main_output = outputs
         model.zero_grad()
         cost = loss(main_output, labels).to(device)
-        loss.requires_grad=True
+        cost.requires_grad=True
         cost.backward()
         # 图像 + 梯度得到对抗样本
         adv_images = images + alpha*images.grad.sign()
